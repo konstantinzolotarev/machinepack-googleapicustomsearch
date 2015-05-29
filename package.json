@@ -17,6 +17,10 @@
     "lodash": "^3.9.3",
     "machine": "^9.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/konstantinzolotarev/machinepack-googleapicustomsearch.git"
+  },
   "devDependencies": {
     "test-machinepack-mocha": "^2.0.0"
   },
