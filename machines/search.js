@@ -28,6 +28,14 @@ module.exports = {
       description: 'Search phrase',
       required: true
     },
+    cx: {
+      example: '',
+      description: 'The custom search engine ID to use for this request'
+    },
+    cref: {
+      example: '',
+      description: 'The URL of a linked custom search engine specification to use for this request. '
+    },
     auth: {
       example: 'AIzaSyAYVDlaoVs_GZw9JNvSclRWH_PEMKII6tc',
       description: 'You generated API_KEY'
@@ -63,6 +71,13 @@ module.exports = {
   },
 
   exits: {
+    invalidParameter: {
+      description: 'Invalid field parameter passed'
+    },
+
+    dailyLimitExceededUnreg: {
+      description: 'Daily Limit for Unauthenticated Use Exceeded. Continued use requires signup.'
+    },
 
     success: {
       variableName: 'result',
@@ -76,7 +91,20 @@ module.exports = {
     _.merge(params, inputs);
     customsearch.cse.list(params, function(err, result) {
       if (err) {
-        return exits.error(err);
+        if (!err.code) {
+          return exits.error(err);
+        }
+        switch (err.code) {
+          case 400:
+            return exits.invalidParameter(err);
+            break;
+          case 403:
+            return exits.dailyLimitExceededUnreg(err);
+            break;
+          default:
+            return exits.error(err);
+            break;
+        }
       }
       return exits.success(result);
     });
